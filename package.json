@@ -1,0 +1,25 @@
+{
+  "name": "tienda_virtual",
+  "version": "1.0.0",
+  "description": "Creación de APIREST para una tienda virtual",
+  "homepage": "https://github.com/JKaren2025/Backend_Tienda_Virtual#readme",
+  "bugs": {
+    "url": "https://github.com/JKaren2025/Backend_Tienda_Virtual/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JKaren2025/Backend_Tienda_Virtual.git"
+  },
+  "license": "ISC",
+  "author": "Johana Karen Barragan Marquez",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "morgan": "^1.10.1"
+  }
+}
