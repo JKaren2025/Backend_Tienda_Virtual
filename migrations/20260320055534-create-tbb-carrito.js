@@ -2,39 +2,27 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('tbc_usuario', {
+    await queryInterface.createTable('tbb_carrito', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nombre: {
-        type: Sequelize.STRING(100),
+      id_usuario: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
-      direccion: {
-        type: Sequelize.STRING(200),
+      total: {
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
-      telefono: {
-        type: Sequelize.STRING(15),
+      estado: {
+        type: Sequelize.ENUM('pendiente', 'pagado', 'cancelado'),
+        defaultValue: 'pendiente',
         allowNull: false
       },
-      email: {
-        type: Sequelize.STRING(120),
-        allowNull: false
-      },
-      password: {
-        type: Sequelize.STRING(255),
-        allowNull: false
-      },
-      rol: {
-        type: Sequelize.ENUM('admin', 'cliente'),
-        allowNull: false,
-        defaultValue: 'cliente'
-      },
-      fecha_registro: {
+      fecha_creacion: {
         type: Sequelize.DATE,
         allowNull: false
       },
@@ -49,6 +37,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('tbc_usuario');
+    await queryInterface.dropTable('tbb_carrito');
   }
 };

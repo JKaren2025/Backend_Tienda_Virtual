@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('tbc_usuario', {
+    await queryInterface.createTable('tbb_producto', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,30 +13,28 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false
       },
-      direccion: {
-        type: Sequelize.STRING(200),
+      descripcion: {
+        type: Sequelize.STRING(150),
         allowNull: false
       },
-      telefono: {
-        type: Sequelize.STRING(15),
+      precio: {
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
-      email: {
-        type: Sequelize.STRING(120),
+      stock: {
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
-      password: {
-        type: Sequelize.STRING(255),
-        allowNull: false
-      },
-      rol: {
-        type: Sequelize.ENUM('admin', 'cliente'),
+      
+      id_categoria: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 'cliente'
-      },
-      fecha_registro: {
-        type: Sequelize.DATE,
-        allowNull: false
+        references: {
+          model: 'tbc_categoria',
+          key: 'id'
+        },
+        onUpdate: 'NO ACTION',
+        onDelete: 'NO ACTION'
       },
       createdAt: {
         allowNull: false,
@@ -49,6 +47,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('tbc_usuario');
+    await queryInterface.dropTable('tbb_producto');
   }
 };
