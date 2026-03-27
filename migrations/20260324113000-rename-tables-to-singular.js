@@ -28,6 +28,24 @@ module.exports = {
       }
     };
 
+    const addConstraintIfMissing = async (tableName, constraintName, options) => {
+      if (!hasTable(tableName)) {
+        return;
+      }
+
+      const [constraints] = await sequelize.query(`
+        SELECT CONSTRAINT_NAME
+        FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = '${tableName}'
+          AND CONSTRAINT_NAME = '${constraintName}'
+      `);
+
+      if (constraints.length === 0) {
+        await queryInterface.addConstraint(tableName, options);
+      }
+    };
+
     await dropForeignKeyIfExists('tbd_carrito_detalle', 'id_carrito');
     await dropForeignKeyIfExists('tbd_carrito_detalle', 'id_producto');
     await dropForeignKeyIfExists('tbb_carritos', 'id_usuario');
@@ -49,7 +67,7 @@ module.exports = {
       await queryInterface.renameTable('tbb_carritos', 'tbb_carrito');
     }
 
-    await queryInterface.addConstraint('tbb_producto', {
+    await addConstraintIfMissing('tbb_producto', 'fk_tbb_producto_id_categoria', {
       fields: ['id_categoria'],
       type: 'foreign key',
       name: 'fk_tbb_producto_id_categoria',
@@ -61,7 +79,7 @@ module.exports = {
       onDelete: 'RESTRICT'
     });
 
-    await queryInterface.addConstraint('tbb_carrito', {
+    await addConstraintIfMissing('tbb_carrito', 'fk_tbb_carrito_id_usuario', {
       fields: ['id_usuario'],
       type: 'foreign key',
       name: 'fk_tbb_carrito_id_usuario',
@@ -73,7 +91,7 @@ module.exports = {
       onDelete: 'RESTRICT'
     });
 
-    await queryInterface.addConstraint('tbd_carrito_detalle', {
+    await addConstraintIfMissing('tbd_carrito_detalle', 'fk_tbd_carrito_detalle_id_carrito', {
       fields: ['id_carrito'],
       type: 'foreign key',
       name: 'fk_tbd_carrito_detalle_id_carrito',
@@ -85,7 +103,7 @@ module.exports = {
       onDelete: 'CASCADE'
     });
 
-    await queryInterface.addConstraint('tbd_carrito_detalle', {
+    await addConstraintIfMissing('tbd_carrito_detalle', 'fk_tbd_carrito_detalle_id_producto', {
       fields: ['id_producto'],
       type: 'foreign key',
       name: 'fk_tbd_carrito_detalle_id_producto',
