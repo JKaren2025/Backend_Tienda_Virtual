@@ -25,16 +25,9 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
-      
       id_categoria: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'tbc_categoria',
-          key: 'id'
-        },
-        onUpdate: 'NO ACTION',
-        onDelete: 'NO ACTION'
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

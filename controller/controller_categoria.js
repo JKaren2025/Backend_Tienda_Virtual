@@ -1,52 +1,103 @@
-const Sequelize = require('sequelize');
 const db = require('../models');
+
 const categoria = db.tbc_categoria;
 
-module.exports = {//creanodo el controlador de categoria
-    create(req, res) {//dos constantes, enlaprimera se almacenra KLOS ATRIBUTOS, ENEL CASODE CREAREL NOMBRE, DIRECCION ETC,RES, MUESTRA LA SALIDA DEL SERVIDOR, SILIMPIE O ACTUALICE CORRECTAMENTE
-        return categoria.create({
-            nombre: req.body.nombre
-        })
-        .then(categoria=>res.status(200).send(categoria))
-        //.then(categoria => res.status(200).send({message: "Dato creado correctamente"}) )
-        .catch(error => res.status(400).send(error))
-    },
-    list(_, res) {//listando las categorias esto para que se pueda mostrar en el frontend
-        return categoria.findAll()
-            .then(categoria => res.status(200).send(categoria))
-            .catch(error => res.status(400).send(error))
-    },
-    find(req, res) {
-        return categoria.findAll({
-            where: {
-                nombre: req.params.nombre
-            }
-        })
-        .then(categoria => res.status(200).send(categoria))
-        .catch(error => res.status(400).send(error))
-    },
-    delete(req, res){
-        return categoria.destroy({
-            where: {
-                id:req.params.id
-            }
-        })
-        .then(() => res.status(200).send({ message: "Dato eliminado correctamente" }))
-        .catch(error => res.status(400).send(error))
-    },
-    update(req, res){
-        return categoria.update(
-            {
+module.exports = {
+    async create(req, res) {
+        try {
+            const nuevaCategoria = await categoria.create({
                 nombre: req.body.nombre
-            },
-            {
-                where: {
-                    id: req.params.id
-                }
-            }
-        )
-        .then(() => res.status(200).send({ message: "Dato actualizado correctamente" }))
-        .catch(error => res.status(400).send(error))
-    }
+            });
 
+            return res.status(201).send(nuevaCategoria);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async list(_, res) {
+        try {
+            const categorias = await categoria.findAll({
+                order: [['id', 'ASC']],
+                include: [{
+                    model: db.tbb_producto,
+                    as: 'productos'
+                }]
+            });
+
+            return res.status(200).send(categorias);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async findById(req, res) {
+        try {
+            const categoriaEncontrada = await categoria.findByPk(req.params.id, {
+                include: [{
+                    model: db.tbb_producto,
+                    as: 'productos'
+                }]
+            });
+
+            if (!categoriaEncontrada) {
+                return res.status(404).send({ mensaje: 'Categoria no encontrada' });
+            }
+
+            return res.status(200).send(categoriaEncontrada);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async findByName(req, res) {
+        try {
+            const categorias = await categoria.findAll({
+                where: {
+                    nombre: req.params.nombre
+                },
+                include: [{
+                    model: db.tbb_producto,
+                    as: 'productos'
+                }]
+            });
+
+            return res.status(200).send(categorias);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async update(req, res) {
+        try {
+            const categoriaEncontrada = await categoria.findByPk(req.params.id);
+
+            if (!categoriaEncontrada) {
+                return res.status(404).send({ mensaje: 'Categoria no encontrada' });
+            }
+
+            await categoriaEncontrada.update({
+                nombre: req.body.nombre
+            });
+
+            return res.status(200).send(categoriaEncontrada);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async delete(req, res) {
+        try {
+            const categoriaEncontrada = await categoria.findByPk(req.params.id);
+
+            if (!categoriaEncontrada) {
+                return res.status(404).send({ mensaje: 'Categoria no encontrada' });
+            }
+
+            await categoriaEncontrada.destroy();
+            return res.status(200).send({ mensaje: 'Datos eliminados correctamente' });
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    }
 };

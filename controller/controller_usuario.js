@@ -1,50 +1,11 @@
 const db = require('../models');
+
 const usuario = db.tbc_usuario;
 
 module.exports = {
-    create(req, res) {
-        return usuario.create({
-            nombre: req.body.nombre,
-            direccion: req.body.direccion,
-            telefono: req.body.telefono,
-            email: req.body.email,
-            password: req.body.password,
-            rol: req.body.rol || 'cliente',
-            fecha_registro: req.body.fecha_registro || new Date()
-        })
-        .then(usuario => res.status(200).send(usuario))
-        .catch(error => res.status(400).send(error))
-    },
-
-    list(_, res) {
-        return usuario.findAll()
-            .then(usuario => res.status(200).send(usuario))
-            .catch(error => res.status(400).send(error))
-    },
-
-    find(req, res) {
-        return usuario.findAll({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(usuario => res.status(200).send(usuario))
-        .catch(error => res.status(400).send(error))
-    },
-
-    delete(req, res) {
-        return usuario.destroy({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(() => res.status(200).send({ message: 'Dato eliminado correctamente' }))
-        .catch(error => res.status(400).send(error))
-    },
-
-    update(req, res) {
-        return usuario.update(
-            {
+    async create(req, res) {
+        try {
+            const nuevoUsuario = await usuario.create({
                 nombre: req.body.nombre,
                 direccion: req.body.direccion,
                 telefono: req.body.telefono,
@@ -52,14 +13,73 @@ module.exports = {
                 password: req.body.password,
                 rol: req.body.rol,
                 fecha_registro: req.body.fecha_registro
-            },
-            {
-                where: {
-                    id: req.params.id
-                }
+            });
+
+            return res.status(201).send(nuevoUsuario);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async list(_, res) {
+        try {
+            const usuarios = await usuario.findAll();
+            return res.status(200).send(usuarios);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async find(req, res) {
+        try {
+            const usuarioEncontrado = await usuario.findByPk(req.params.id);
+
+            if (!usuarioEncontrado) {
+                return res.status(404).send({ mensaje: 'Usuario no encontrado' });
             }
-        )
-        .then(() => res.status(200).send({ message: 'Dato actualizado correctamente' }))
-        .catch(error => res.status(400).send(error))
+
+            return res.status(200).send(usuarioEncontrado);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async update(req, res) {
+        try {
+            const usuarioEncontrado = await usuario.findByPk(req.params.id);
+
+            if (!usuarioEncontrado) {
+                return res.status(404).send({ mensaje: 'Usuario no encontrado' });
+            }
+
+            await usuarioEncontrado.update({
+                nombre: req.body.nombre,
+                direccion: req.body.direccion,
+                telefono: req.body.telefono,
+                email: req.body.email,
+                password: req.body.password,
+                rol: req.body.rol,
+                fecha_registro: req.body.fecha_registro
+            });
+
+            return res.status(200).send(usuarioEncontrado);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async delete(req, res) {
+        try {
+            const usuarioEncontrado = await usuario.findByPk(req.params.id);
+
+            if (!usuarioEncontrado) {
+                return res.status(404).send({ mensaje: 'Usuario no encontrado' });
+            }
+
+            await usuarioEncontrado.destroy();
+            return res.status(200).send({ mensaje: 'Datos eliminados correctamente' });
+        } catch (error) {
+            return res.status(400).send(error);
+        }
     }
 };

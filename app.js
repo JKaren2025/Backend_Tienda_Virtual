@@ -1,28 +1,36 @@
-require('dotenv').config();
-
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const http = require('http');
 const app = express();
-const routeCategorias = require('./routes/route_categorias');
 
-app.use(logger('dev'));//para crear archivos en el sistema, en el console
-app.use(bodyParser.json());//devolver respuestas en formato json
-app.use(bodyParser.urlencoded({ extended: true }));//devolver respuestas en formato urlencoded
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', (req, res) =>  res.status(200).send({
-    message: 'Bienvenido a mi APIde Tienda Virtual',
+app.get('/', (req, res) => res.status(200).send({
+    message: 'Bienvenido a la API de la tienda virtual'
 }));
 
-routeCategorias(app);
+require('./routes/route_categorias')(app);
+require('./routes/route_usuarios')(app);
+require('./routes/route_productos')(app);
+require('./routes/route_carritos')(app);
+require('./routes/route_carrito_detalle')(app);
 
-const port = parseInt(process.env.PORT) || 8000;//puerto de react 51.30  a 51,34 ES PARA QUE NO CHOQUE
+const port = Number.parseInt(process.env.PORT, 10) || 3000;
 app.set('port', port);
 
 const server = http.createServer(app);
-server.listen(port, () => {
-    console.log(`Servidor ejecutandose en http://localhost:${port}`);
-});
+server.listen(port);
 module.exports = app;
+
+/**PORT=8000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=1234
+DB_NAME=db_tienda_virtual
+*/

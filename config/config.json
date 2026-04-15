@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "1234",
-    "database": "db_tiendavirtual",
+    "database": "db_tienda_virtual",
     "host": "localhost",
     "port": 3307,
     "dialect": "mysql"
@@ -10,7 +10,7 @@
   "test": {
     "username": "root",
     "password": "1234",
-    "database": "db_tiendavirtual",
+    "database": "db_tienda_virtual",
     "host": "localhost",
     "port": 3307,
     "dialect": "mysql"
@@ -18,7 +18,7 @@
   "production": {
     "username": "root",
     "password": "1234",
-    "database": "db_tiendavirtual",
+    "database": "db_tienda_virtual",
     "host": "localhost",
     "port": 3307,
     "dialect": "mysql"

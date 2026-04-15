@@ -1,59 +1,102 @@
 const db = require('../models');
+
 const carritoDetalle = db.tbd_carrito_detalle;
 
 module.exports = {
-    create(req, res) {
-        return carritoDetalle.create({
-            id_carrito: req.body.id_carrito,
-            id_producto: req.body.id_producto,
-            precio_unitario: req.body.precio_unitario,
-            cantidad: req.body.cantidad
-        })
-        .then(carritoDetalle => res.status(200).send(carritoDetalle))
-        .catch(error => res.status(400).send(error))
-    },
-
-    list(_, res) {
-        return carritoDetalle.findAll()
-            .then(carritoDetalle => res.status(200).send(carritoDetalle))
-            .catch(error => res.status(400).send(error))
-    },
-
-    find(req, res) {
-        return carritoDetalle.findAll({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(carritoDetalle => res.status(200).send(carritoDetalle))
-        .catch(error => res.status(400).send(error))
-    },
-
-    delete(req, res) {
-        return carritoDetalle.destroy({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(() => res.status(200).send({ message: 'Dato eliminado correctamente' }))
-        .catch(error => res.status(400).send(error))
-    },
-
-    update(req, res) {
-        return carritoDetalle.update(
-            {
+    async create(req, res) {
+        try {
+            const nuevoDetalle = await carritoDetalle.create({
                 id_carrito: req.body.id_carrito,
                 id_producto: req.body.id_producto,
                 precio_unitario: req.body.precio_unitario,
                 cantidad: req.body.cantidad
-            },
-            {
-                where: {
-                    id: req.params.id
-                }
+            });
+
+            return res.status(201).send(nuevoDetalle);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async list(_, res) {
+        try {
+            const detalles = await carritoDetalle.findAll({
+                include: [
+                    {
+                        model: db.tbb_carrito,
+                        as: 'carrito'
+                    },
+                    {
+                        model: db.tbb_producto,
+                        as: 'producto'
+                    }
+                ]
+            });
+
+            return res.status(200).send(detalles);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async find(req, res) {
+        try {
+            const detalleEncontrado = await carritoDetalle.findByPk(req.params.id, {
+                include: [
+                    {
+                        model: db.tbb_carrito,
+                        as: 'carrito'
+                    },
+                    {
+                        model: db.tbb_producto,
+                        as: 'producto'
+                    }
+                ]
+            });
+
+            if (!detalleEncontrado) {
+                return res.status(404).send({ mensaje: 'Detalle de carrito no encontrado' });
             }
-        )
-        .then(() => res.status(200).send({ message: 'Dato actualizado correctamente' }))
-        .catch(error => res.status(400).send(error))
+
+            return res.status(200).send(detalleEncontrado);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async update(req, res) {
+        try {
+            const detalleEncontrado = await carritoDetalle.findByPk(req.params.id);
+
+            if (!detalleEncontrado) {
+                return res.status(404).send({ mensaje: 'Detalle de carrito no encontrado' });
+            }
+
+            await detalleEncontrado.update({
+                id_carrito: req.body.id_carrito,
+                id_producto: req.body.id_producto,
+                precio_unitario: req.body.precio_unitario,
+                cantidad: req.body.cantidad
+            });
+
+            return res.status(200).send(detalleEncontrado);
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    },
+
+    async delete(req, res) {
+        try {
+            const detalleEncontrado = await carritoDetalle.findByPk(req.params.id);
+
+            if (!detalleEncontrado) {
+                return res.status(404).send({ mensaje: 'Detalle de carrito no encontrado' });
+            }
+
+            await detalleEncontrado.destroy();
+            return res.status(200).send({ mensaje: 'Datos eliminados correctamente' });
+        } catch (error) {
+            return res.status(400).send(error);
+        }
     }
 };

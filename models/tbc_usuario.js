@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   class tbc_usuario extends Model {
     static associate(models) {
       tbc_usuario.hasMany(models.tbb_carrito, {
-        foreignKey: 'id_usuario',
-        as: 'carritos'
+        as: 'carritos',
+        foreignKey: 'id_usuario'
       });
     }
   }
@@ -36,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     rol: {
       type: DataTypes.ENUM('admin', 'cliente'),
-      allowNull: false,
-      defaultValue: 'cliente'
+      defaultValue: 'cliente',
+      allowNull: false
     },
     fecha_registro: {
       type: DataTypes.DATE,

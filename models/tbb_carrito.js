@@ -7,13 +7,13 @@ module.exports = (sequelize, DataTypes) => {
   class tbb_carrito extends Model {
     static associate(models) {
       tbb_carrito.belongsTo(models.tbc_usuario, {
-        foreignKey: 'id_usuario',
-        as: 'usuario'
+        as: 'usuario',
+        foreignKey: 'id_usuario'
       });
 
       tbb_carrito.hasMany(models.tbd_carrito_detalle, {
-        foreignKey: 'id_carrito',
-        as: 'detalles'
+        as: 'detalles',
+        foreignKey: 'id_carrito'
       });
     }
   }
