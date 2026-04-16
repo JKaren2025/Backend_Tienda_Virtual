@@ -10,6 +10,7 @@ module.exports = {
                 direccion: req.body.direccion,
                 telefono: req.body.telefono,
                 email: req.body.email,
+                imagen: req.body.imagen,
                 password: req.body.password,
                 rol: req.body.rol,
                 fecha_registro: req.body.fecha_registro
@@ -57,6 +58,7 @@ module.exports = {
                 direccion: req.body.direccion,
                 telefono: req.body.telefono,
                 email: req.body.email,
+                imagen: req.body.imagen,
                 password: req.body.password,
                 rol: req.body.rol,
                 fecha_registro: req.body.fecha_registro

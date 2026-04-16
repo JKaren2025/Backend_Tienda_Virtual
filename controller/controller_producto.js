@@ -9,6 +9,7 @@ module.exports = {
                 nombre: req.body.nombre,
                 descripcion: req.body.descripcion,
                 precio: req.body.precio,
+                imagen: req.body.imagen,
                 stock: req.body.stock,
                 id_categoria: req.body.id_categoria
             });
@@ -65,6 +66,7 @@ module.exports = {
                 nombre: req.body.nombre,
                 descripcion: req.body.descripcion,
                 precio: req.body.precio,
+                imagen: req.body.imagen,
                 stock: req.body.stock,
                 id_categoria: req.body.id_categoria
             });

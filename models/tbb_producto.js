@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     }
+    ,
+    imagen: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    }
   }, {
     sequelize,
     modelName: 'tbb_producto',
