@@ -7,12 +7,22 @@ const Usuario = db.tbc_usuario;
 module.exports = {
   async login(req, res) {
     try {
-      const { email, password } = req.body;
-      if (!email || !password) {
-        return res.status(400).send({ mensaje: 'Email y contraseña son requeridos' });
+      // aceptar como identificador el campo email, usuario o nombre enviado desde el frontend
+      const identifier = req.body.email || req.body.usuario || req.body.nombre;
+      const { password } = req.body;
+      if (!identifier || !password) {
+        return res.status(400).send({ mensaje: 'Email/usuario y contraseña son requeridos' });
       }
 
-      const usuario = await Usuario.findOne({ where: { email } });
+      // buscar por email o por nombre
+      const usuario = await Usuario.findOne({
+        where: {
+          [db.Sequelize.Op.or]: [
+            { email: identifier },
+            { nombre: identifier }
+          ]
+        }
+      });
       if (!usuario) {
         return res.status(401).send({ mensaje: 'Credenciales inválidas' });
       }
