@@ -18,6 +18,12 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "migrate": "sequelize-cli db:migrate",
+    "db:ver": "node scripts/ver-registros.js",
+    "db:usuarios": "node scripts/ver-registros.js usuarios",
+    "db:categorias": "node scripts/ver-registros.js categorias",
+    "db:productos": "node scripts/ver-registros.js productos",
+    "db:carritos": "node scripts/ver-registros.js carritos",
+    "db:detalles": "node scripts/ver-registros.js detalles",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -28,7 +34,7 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.1",
-    "mysql2": "^3.22.1",
+    "mysql2": "^3.22.2",
     "sequelize": "^6.37.8"
   },
   "devDependencies": {
